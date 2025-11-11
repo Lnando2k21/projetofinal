@@ -538,10 +538,11 @@
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    if (data.token) localStorage.setItem('token', data.token);
-                    // sucesso
-                    window.location.href = 'dashboard.html';
+                    // Exibe mensagem de sucesso e redireciona para login
+                    showAlert('Cadastro realizado com sucesso! Você será redirecionado para a tela de login.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2500);
                 } else {
                     const errText = await response.text();
                     showAlert('Erro no registro: ' + (errText || response.statusText));
