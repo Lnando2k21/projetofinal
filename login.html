@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Conecta Bairro</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/styles.css" rel="stylesheet">
+    <!-- Vlibras Widget -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #6366f1;
+            --primary-hover: #818cf8;
+            --bg-color: #1a1a1a;
+            --text-color: #f8f9fa;
+            --card-bg: #2d2d2d;
+            --border-color: #404040;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .login-container {
+            background-color: var(--bg-color);
+        }
+
+        .login-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .theme-switch {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .theme-switch:focus {
+            outline: 2px solid var(--primary-color);
+        }
+
+        .login-container {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            max-width: 400px;
+            width: 100%;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            background-color: white;
+        }
+        .brand-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .brand-logo h1 {
+            color: #4f46e5;
+            font-weight: bold;
+        }
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+        }
+        .btn-primary {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+            border-color: #4338ca;
+        }
+        .social-login {
+            border-top: 1px solid #dee2e6;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+        .error-message {
+            display: none;
+            color: #dc3545;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botão de alternar tema -->
+    <button class="theme-switch" id="themeSwitch" aria-label="Alternar modo escuro">
+        <span class="theme-icon" aria-hidden="true">🌓</span>
+        <span class="theme-text">Modo Escuro</span>
+    </button>
+
+    <!-- Botão de áudio -->
+    <button class="theme-switch" id="audioButton" style="top: 4rem;" aria-label="Ouvir instruções da página">
+        <span class="theme-icon" aria-hidden="true">🔊</span>
+        <span class="theme-text">Ouvir Página</span>
+    </button>
+
+    <div class="login-container" role="main">
+        <div class="login-card" role="form" aria-labelledby="loginTitle">
+            <div class="brand-logo">
+                <h1 id="loginTitle">Conecta Bairro</h1>
+                <p class="text-muted" id="loginSubtitle">Entre na sua conta</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="return handleLogin(event)" role="form" aria-labelledby="loginTitle">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" 
+                           class="form-control" 
+                           id="email" 
+                           name="email" 
+                           required 
+                           aria-required="true"
+                           aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text visually-hidden">Digite seu endereço de email cadastrado</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Senha</label>
+                    <input type="password" 
+                           class="form-control" 
+                           id="password" 
+                           name="password" 
+                           required 
+                           aria-required="true"
+                           aria-describedby="passwordHelp">
+                    <div id="passwordHelp" class="form-text visually-hidden">Digite sua senha de acesso</div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" 
+                           class="form-check-input" 
+                           id="rememberMe" 
+                           aria-describedby="rememberHelp">
+                    <label class="form-check-label" for="rememberMe">Lembrar de mim</label>
+                    <div id="rememberHelp" class="form-text visually-hidden">Marque para manter sua sessão ativa neste dispositivo</div>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
+                
+                <div class="text-center mb-3">
+                    <a href="#" class="text-decoration-none">Esqueceu sua senha?</a>
+                </div>
+
+                <div class="social-login">
+                    <p class="text-center text-muted">Ou entre com</p>
+                    <div class="d-flex justify-content-center gap-2 align-items-center">
+                        <!-- Google button will be rendered by Google Identity Services into this div -->
+                        <div id="googleButtonDiv"></div>
+
+                        <!-- Fallback custom Google button (hidden if GSI renders) -->
+                        <button id="btnGoogleCustom" type="button" class="btn btn-outline-secondary visually-hidden">
+                            <img src="https://img.freepik.com/psd-gratuitas/ilustracao-de-renderizacao-3d-isolada-do-icone-do-google_47987-9777.jpg?semt=ais_hybrid&w=740&q=80" alt="Google" height="20"> Google
+                        </button>
+
+                        <!-- Facebook button -->
+                        <button id="btnFacebook" type="button" class="btn btn-outline-secondary">
+                            <img src="https://img.freepik.com/fotos-premium/um-logotipo-azul-e-branco-do-facebook-e-exibido-em-um-fundo-branco_1109006-147418.jpg?semt=ais_hybrid&w=740&q=80" alt="Facebook" height="20"> Facebook
+                        </button>
+                    </div>
+                    <small class="text-muted d-block text-center mt-2" id="oauthHint">Configure os client IDs (Google / Facebook) nas variáveis JS nesta página para habilitar o login social.</small>
+                </div>
+
+                <div class="text-center mt-3">
+                    <p class="text-muted">
+                        Não tem uma conta? <a href="registro.html" class="text-decoration-none">Cadastre-se</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Google Identity Services (render button) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Main script: login + social handlers + accessibility -->
+    <script>
+        // Speech Synthesis setup
+        const synth = window.speechSynthesis;
+        const audioInstructions = `
+            Bem-vindo ao Conecta Bairro. Esta é a página de login.
+            Use o formulário para entrar com seu email e senha.
+            Há também opções de login com Google e Facebook.
+            No topo da página, você encontra botões para alternar o modo escuro e ouvir estas instruções.
+            O widget de Libras está disponível no canto direito da tela.
+        `;
+
+        // Theme switcher
+        function initTheme() {
+            const themeSwitch = document.getElementById('themeSwitch');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeSwitch.querySelector('.theme-text').textContent = 'Modo Claro';
+            }
+
+            themeSwitch.addEventListener('click', () => {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+                themeSwitch.querySelector('.theme-text').textContent = isDark ? 'Modo Escuro' : 'Modo Claro';
+                localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            });
+        }
+
+        // Audio instructions
+        function initAudio() {
+            const audioButton = document.getElementById('audioButton');
+            
+            audioButton.addEventListener('click', () => {
+                if (synth.speaking) {
+                    synth.cancel();
+                    audioButton.querySelector('.theme-text').textContent = 'Ouvir Página';
+                    return;
+                }
+
+                const utterance = new SpeechSynthesisUtterance(audioInstructions);
+                utterance.lang = 'pt-BR';
+                utterance.rate = 0.9;
+                
+                utterance.onstart = () => {
+                    audioButton.querySelector('.theme-text').textContent = 'Parar Áudio';
+                };
+                
+                utterance.onend = () => {
+                    audioButton.querySelector('.theme-text').textContent = 'Ouvir Página';
+                };
+                
+                synth.speak(utterance);
+            });
+        }
+
+        // Keyboard navigation enhancement
+        function initKeyboardNav() {
+            const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    const focusable = [...document.querySelectorAll(focusableElements)];
+                    const firstFocusable = focusable[0];
+                    const lastFocusable = focusable[focusable.length - 1];
+
+                    if (e.shiftKey && document.activeElement === firstFocusable) {
+                        e.preventDefault();
+                        lastFocusable.focus();
+                    } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                        e.preventDefault();
+                        firstFocusable.focus();
+                    }
+                }
+            });
+        }
+
+        // CONFIGURE AQUI: substitua pelos seus IDs de aplicativo
+        const OAUTH_CONFIG = {
+            // Obtenha em: https://console.cloud.google.com/apis/credentials
+            googleClientId: 'YOUR_GOOGLE_CLIENT_ID',
+            // Obtenha em: https://developers.facebook.com/apps/
+            facebookAppId: 'YOUR_FACEBOOK_APP_ID',
+            // Endpoints do backend (opcional): esses endpoints devem aceitar o token do provedor e retornar um token da sua API
+            backendGoogleUrl: 'http://localhost:3000/auth/google',
+            backendFacebookUrl: 'http://localhost:3000/auth/facebook'
+        };
+
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Reset error message
+            errorMessage.style.display = 'none';
+
+            // Basic validation
+            if (!email || !password) {
+                errorMessage.textContent = 'Por favor, preencha todos os campos';
+                errorMessage.style.display = 'block';
+                return false;
+            }
+
+            // Shortcut: aceitar login local específico (usuário de teste)
+            if (email === 'luizandrade565@gmail.com' && password === '123456') {
+                // set a simple token to simulate login
+                localStorage.setItem('token', 'local-dev-token');
+                
+                // Verificar se há um redirecionamento pendente de serviço
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                const serviceId = urlParams.get('serviceId');
+                
+                if (redirect === 'servicos' && serviceId) {
+                    // Se veio da página de serviços e tem um ID de serviço, voltar para a página de serviços
+                    window.location.href = `contrato.html?serviceId=${serviceId}`;
+                } else {
+                    // Caso contrário, ir para o dashboard
+                    window.location.href = 'dashboard.html';
+                }
+                return false;
+            }
+
+            // Fazer a requisição para a API
+            fetch('http://localhost:3000/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            })
+            .then(async response => {
+                // tentar ler o corpo JSON (se houver)
+                let body = null;
+                try {
+                    body = await response.json();
+                } catch (e) {
+                    body = null;
+                }
+
+                if (response.ok) {
+                    if (body && body.token) {
+                        // Salvar o token no localStorage
+                        localStorage.setItem('token', body.token);
+                        
+                        // Verificar se há um redirecionamento pendente de serviço
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        const serviceId = urlParams.get('serviceId');
+                        
+                        if (redirect === 'servicos' && serviceId) {
+                            // Se veio da página de serviços, redirecionar para contratação
+                            window.location.href = `contrato.html?serviceId=${serviceId}`;
+                        } else {
+                            // Caso contrário, ir para a página principal
+                            window.location.href = 'index.html';
+                        }
+                        return;
+                    }
+                    // resposta OK mas sem token
+                    errorMessage.textContent = 'Resposta inválida do servidor.';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                // response not OK -> mapear mensagem
+                if (response.status === 404) {
+                    // usuário não encontrado
+                    errorMessage.textContent = 'Usuário nao Encontrado';
+                } else if (body && (body.message || body.error)) {
+                    // mostrar a mensagem retornada pelo backend
+                    errorMessage.textContent = body.message || body.error;
+                } else {
+                    errorMessage.textContent = 'Email ou senha inválidos';
+                }
+                errorMessage.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Erro de rede:', error);
+                errorMessage.textContent = 'Erro de rede. Tente novamente mais tarde.';
+                errorMessage.style.display = 'block';
+            });
+
+            return false;
+        }
+
+        // Envia token do provedor ao backend para trocar por token da API
+        async function sendSocialTokenToBackend(provider, payload) {
+            const errorMessage = document.getElementById('errorMessage');
+            try {
+                const url = provider === 'google' ? OAUTH_CONFIG.backendGoogleUrl : OAUTH_CONFIG.backendFacebookUrl;
+                if (!url) throw new Error('Endpoint backend não configurado para ' + provider);
+
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const body = await res.json().catch(() => null);
+                if (res.ok && body && body.token) {
+                    localStorage.setItem('token', body.token);
+                    
+                    // Verificar se há um redirecionamento pendente de serviço
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirect = urlParams.get('redirect');
+                    const serviceId = urlParams.get('serviceId');
+                    
+                    if (redirect === 'servicos' && serviceId) {
+                        // Se veio da página de serviços, redirecionar para contratação
+                        window.location.href = `contrato.html?serviceId=${serviceId}`;
+                    } else {
+                        // Caso contrário, ir para a página principal
+                        window.location.href = 'index.html';
+                    }
+                    return;
+                }
+
+                // Falha no backend: se receber dados do provedor, podemos armazenar um token dev para testes locais
+                console.warn('Falha ao trocar token social no backend:', body || res.status);
+                errorMessage.textContent = (body && (body.message || body.error)) || 'Falha ao autenticar via ' + provider + '. Confira a configuração.';
+                errorMessage.style.display = 'block';
+            } catch (err) {
+                console.error(err);
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = 'Erro ao autenticar via ' + provider + '. Veja console para detalhes.';
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Google Identity Services handler
+        function handleGoogleCredential(response) {
+            // response.credential é um JWT ID token (OpenID Connect)
+            if (response && response.credential) {
+                // Envie ao backend para validação/exchange e criação de sessão
+                sendSocialTokenToBackend('google', { credential: response.credential });
+            } else {
+                document.getElementById('errorMessage').textContent = 'Falha ao receber credencial do Google.';
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+
+        // Inicializa o botão do Google (se houver clientId configurado)
+        function initGoogle() {
+            const hint = document.getElementById('oauthHint');
+            if (OAUTH_CONFIG.googleClientId && OAUTH_CONFIG.googleClientId !== 'YOUR_GOOGLE_CLIENT_ID') {
+                try {
+                    google.accounts.id.initialize({
+                        client_id: OAUTH_CONFIG.googleClientId,
+                        callback: handleGoogleCredential,
+                    });
+                    // Render the default Google button into our div
+                    google.accounts.id.renderButton(
+                        document.getElementById('googleButtonDiv'),
+                        { theme: 'outline', size: 'large', width: 200 }
+                    );
+                    hint.textContent = 'Login social habilitado.';
+                } catch (e) {
+                    console.warn('Erro ao inicializar Google Identity:', e);
+                    hint.textContent = 'Erro ao inicializar o Google Sign-In. Veja console.';
+                }
+            } else {
+                hint.textContent = 'Defina OAUTH_CONFIG.googleClientId para habilitar Google Sign-In.';
+            }
+        }
+
+        // Facebook SDK init + login handler
+        function initFacebook() {
+            const hint = document.getElementById('oauthHint');
+            if (OAUTH_CONFIG.facebookAppId && OAUTH_CONFIG.facebookAppId !== 'YOUR_FACEBOOK_APP_ID') {
+                try {
+                    window.fbAsyncInit = function() {
+                        FB.init({
+                            appId: OAUTH_CONFIG.facebookAppId,
+                            cookie: true,
+                            xfbml: false,
+                            version: 'v17.0'
+                        });
+                        hint.textContent = 'Login social habilitado.';
+                    };
+                    // Load the SDK (script tag injection)
+                    (function(d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s); js.id = id;
+                        js.src = "https://connect.facebook.net/pt_BR/sdk.js";
+                        fjs.parentNode.insertBefore(js, fjs);
+                    }(document, 'script', 'facebook-jssdk'));
+                } catch (e) {
+                    console.warn('Erro ao inicializar Facebook SDK:', e);
+                    hint.textContent = 'Erro ao inicializar Facebook Login. Veja console.';
+                }
+            } else {
+                hint.textContent = hint.textContent + ' Defina OAUTH_CONFIG.facebookAppId para habilitar Facebook Login.';
+            }
+        }
+
+        // Chamado pelo botão Facebook
+        function handleFBLogin() {
+            if (!window.FB) {
+                document.getElementById('errorMessage').textContent = 'Facebook SDK não carregado.';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    // enviar accessToken ao backend para troca/validação
+                    sendSocialTokenToBackend('facebook', { accessToken: response.authResponse.accessToken });
+                } else {
+                    document.getElementById('errorMessage').textContent = 'Login Facebook cancelado.';
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            }, { scope: 'email,public_profile' });
+        }
+
+        // Verificar se já existe um token válido
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar recursos de acessibilidade
+            initTheme();
+            initAudio();
+            initKeyboardNav();
+
+            // inicializar Google/Facebook (se configurados)
+            initGoogle();
+            initFacebook();
+
+            const btnFacebook = document.getElementById('btnFacebook');
+            if (btnFacebook) btnFacebook.addEventListener('click', handleFBLogin);
+
+            const token = localStorage.getItem('token');
+            if (token) {
+                // Verificar se o token ainda é válido fazendo uma requisição para a API
+                fetch('http://localhost:3000/auth/me', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Token válido, redirecionar para a página principal
+                        window.location.href = 'index.html';
+                    } else {
+                        // Token inválido, remover do localStorage
+                        localStorage.removeItem('token');
+                    }
+                })
+                .catch(error => {
+                    localStorage.removeItem('token');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

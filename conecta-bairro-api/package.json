@@ -1,0 +1,22 @@
+{
+  "name": "conecta-bairro-api",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "bcrypt": "^5.1.0",
+    "jsonwebtoken": "^9.0.0",
+    "prisma": "^5.0.0",
+    "@prisma/client": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

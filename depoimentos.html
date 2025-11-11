@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depoimentos - Conecta Bairro</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link href="https://unpkg.com/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/styles.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(rgba(79, 70, 229, 0.9), rgba(79, 70, 229, 0.9)),
+                        url('img/testimonials-bg.jpg') center/cover;
+            color: white;
+            padding: 6rem 0;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .testimonial-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 4px solid #4f46e5;
+        }
+
+        .rating {
+            color: #ffc107;
+            margin: 1rem 0;
+        }
+
+        .service-tag {
+            background-color: #e2e8f0;
+            color: #4f46e5;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .featured-testimonial {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .featured-testimonial .rating {
+            color: #fff;
+        }
+
+        .featured-testimonial .service-tag {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .testimonial-form {
+            background-color: #f8fafc;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .swiper-container {
+            padding: 2rem;
+        }
+
+        .filter-btn.active {
+            background-color: #4f46e5;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Conecta Bairro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="servicos.html">Serviços</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="depoimentos.html">Depoimentos</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="navbarButtons">
+                    <!-- Botões serão inseridos via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 mb-3">Depoimentos</h1>
+            <p class="lead">Descubra o que nossa comunidade está dizendo sobre os serviços</p>
+        </div>
+    </section>
+
+    <!-- Filtros -->
+    <section class="container mt-5">
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <button class="btn btn-outline-primary filter-btn active" data-filter="todos">Todos</button>
+                    <button class="btn btn-outline-primary filter-btn" data-filter="limpeza">Limpeza</button>
+                    <button class="btn btn-outline-primary filter-btn" data-filter="manutencao">Manutenção</button>
+                    <button class="btn btn-outline-primary filter-btn" data-filter="reformas">Reformas</button>
+                    <button class="btn btn-outline-primary filter-btn" data-filter="eletrica">Elétrica</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos em Destaque -->
+    <section class="container mt-4">
+        <h2 class="text-center mb-4">Depoimentos em Destaque</h2>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <!-- Depoimentos serão inseridos aqui via JavaScript -->
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+
+    <!-- Todos os Depoimentos -->
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Experiências da Nossa Comunidade</h2>
+        <div class="row" id="allTestimonials">
+            <!-- Depoimentos serão inseridos aqui via JavaScript -->
+        </div>
+    </section>
+
+    <!-- Formulário de Depoimento -->
+    <section class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="testimonial-form">
+                    <h3 class="text-center mb-4">Compartilhe sua Experiência</h3>
+                    <form id="testimonialForm" onsubmit="return submitTestimonial(event)">
+                        <div class="mb-3">
+                            <label for="service" class="form-label">Serviço Utilizado</label>
+                            <select class="form-select" id="service" required>
+                                <option value="">Selecione o serviço</option>
+                                <option value="limpeza">Limpeza</option>
+                                <option value="manutencao">Manutenção</option>
+                                <option value="reformas">Reformas</option>
+                                <option value="eletrica">Elétrica</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Avaliação</label>
+                            <div class="rating-input">
+                                <i class="far fa-star" data-rating="1"></i>
+                                <i class="far fa-star" data-rating="2"></i>
+                                <i class="far fa-star" data-rating="3"></i>
+                                <i class="far fa-star" data-rating="4"></i>
+                                <i class="far fa-star" data-rating="5"></i>
+                            </div>
+                            <input type="hidden" id="rating" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Seu Depoimento</label>
+                            <textarea class="form-control" id="comment" rows="4" required></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Enviar Depoimento</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Dados mockados para exemplo
+        const testimonials = [
+            {
+                id: 1,
+                name: "Maria Silva",
+                avatar: "img/avatar1.jpg",
+                service: "limpeza",
+                rating: 5,
+                comment: "Excelente serviço de limpeza! A profissional foi muito atenciosa e cuidadosa.",
+                date: "2025-10-30",
+                featured: true
+            },
+            {
+                id: 2,
+                name: "João Santos",
+                avatar: "img/avatar2.jpg",
+                service: "manutencao",
+                rating: 4,
+                comment: "Ótimo trabalho de manutenção. Resolveu o problema rapidamente.",
+                date: "2025-10-28"
+            },
+            // Adicione mais depoimentos conforme necessário
+        ];
+
+        // Inicializar Swiper
+        const swiper = new Swiper('.swiper-container', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                },
+                968: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+
+        // Função para gerar estrelas
+        function generateStars(rating) {
+            return Array(5).fill(0).map((_, i) => 
+                `<i class="fa${i < rating ? 's' : 'r'} fa-star"></i>`
+            ).join('');
+        }
+
+        // Carregar depoimentos
+        function loadTestimonials(filter = 'todos') {
+            const container = document.getElementById('allTestimonials');
+            const filteredTestimonials = filter === 'todos' 
+                ? testimonials 
+                : testimonials.filter(t => t.service === filter);
+
+            container.innerHTML = filteredTestimonials.map(t => `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="testimonial-card ${t.featured ? 'featured-testimonial' : ''}">
+                        <div class="text-center">
+                            <img src="${t.avatar}" alt="${t.name}" class="testimonial-avatar">
+                            <h5 class="mb-1">${t.name}</h5>
+                            <div class="rating">
+                                ${generateStars(t.rating)}
+                            </div>
+                        </div>
+                        <div class="service-tag">${t.service}</div>
+                        <p class="mt-3">${t.comment}</p>
+                        <small class="text-muted">${new Date(t.date).toLocaleDateString()}</small>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Manipular filtros
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadTestimonials(btn.dataset.filter);
+            });
+        });
+
+        // Sistema de avaliação
+        document.querySelectorAll('.rating-input i').forEach(star => {
+            star.addEventListener('mouseover', function() {
+                const rating = this.dataset.rating;
+                document.querySelectorAll('.rating-input i').forEach((s, i) => {
+                    s.className = i < rating ? 'fas fa-star' : 'far fa-star';
+                });
+            });
+
+            star.addEventListener('click', function() {
+                document.getElementById('rating').value = this.dataset.rating;
+            });
+        });
+
+        // Enviar depoimento
+        function submitTestimonial(event) {
+            event.preventDefault();
+            const formData = {
+                service: document.getElementById('service').value,
+                rating: document.getElementById('rating').value,
+                comment: document.getElementById('comment').value
+            };
+
+            // Aqui você implementaria a lógica para enviar o depoimento para o backend
+            alert('Depoimento enviado com sucesso!');
+            event.target.reset();
+            return false;
+        }
+
+        // Verificar autenticação
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const navbarButtons = document.getElementById('navbarButtons');
+
+            if (token) {
+                navbarButtons.innerHTML = `
+                    <a href="dashboard.html" class="btn btn-outline-primary me-2">Dashboard</a>
+                    <button onclick="logout()" class="btn btn-primary">Sair</button>
+                `;
+            } else {
+                navbarButtons.innerHTML = `
+                    <a href="login.html" class="btn btn-outline-primary me-2">Entrar</a>
+                    <a href="registro.html" class="btn btn-primary">Cadastrar</a>
+                `;
+            }
+        }
+
+        // Função de logout
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadTestimonials();
+        });
+    </script>
+</body>
+</html>

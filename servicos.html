@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços - Conecta Bairro</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/styles.css" rel="stylesheet">
+    <!-- Acessibilidade CSS -->
+    <link href="css/accessibility.css" rel="stylesheet">
+    
+    <!-- VLibras Widget -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
+    <style>
+        .service-card {
+            transition: transform 0.2s;
+            height: 100%;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        .category-filter {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            padding: 1rem 0;
+        }
+        .category-filter::-webkit-scrollbar {
+            display: none;
+        }
+        .filter-btn {
+            margin-right: 0.5rem;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+        }
+        .provider-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .rating-stars {
+            color: #ffc107;
+        }
+        .search-container {
+            background-color: #4f46e5;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .service-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(79, 70, 229, 0.9);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Controles de Acessibilidade -->
+    <div class="accessibility-controls">
+        <button class="accessibility-button" id="themeSwitch" aria-label="Alternar modo escuro">
+            <span class="theme-icon" aria-hidden="true">🌓</span>
+            <span class="theme-text">Modo Escuro</span>
+        </button>
+        <button class="accessibility-button" id="audioButton" aria-label="Ouvir instruções da página">
+            <span class="theme-icon" aria-hidden="true">🔊</span>
+            <span class="theme-text">Ouvir Página</span>
+        </button>
+    </div>
+
+    <!-- Link para pular para o conteúdo principal -->
+    <a href="#main-content" class="skip-to-main">Pular para o conteúdo principal</a>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" role="navigation">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" aria-label="Página inicial do Conecta Bairro">Conecta Bairro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="servicos.html">Serviços</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="navbarButtons">
+                    <!-- Botões serão inseridos via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Section -->
+    <div class="search-container text-white" role="search">
+        <div class="container">
+            <h1 class="mb-4" id="search-title">Encontre Serviços</h1>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="searchInput" class="visually-hidden">Buscar serviços</label>
+                    <input type="text" 
+                           id="searchInput" 
+                           class="form-control" 
+                           placeholder="Buscar serviços..." 
+                           aria-label="Digite o nome do serviço que procura"
+                           aria-describedby="searchHelp">
+                    <div id="searchHelp" class="visually-hidden">Digite palavras-chave para encontrar serviços</div>
+                </div>
+                <div class="col-md-4">
+                    <label for="locationSelect" class="visually-hidden">Selecione o bairro</label>
+                    <select class="form-select" 
+                            id="locationSelect"
+                            aria-label="Selecione o bairro para filtrar serviços">
+                        <option value="">Selecione o bairro</option>
+                        <option value="centro">Centro</option>
+                        <option value="jardins">Jardins</option>
+                        <option value="vila-nova">Vila Nova</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-light w-100" 
+                            onclick="searchServices()"
+                            aria-label="Buscar serviços com os filtros selecionados">
+                        <i class="fas fa-search" aria-hidden="true"></i> Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container mb-5" role="main">
+        <!-- Category Filter -->
+        <div class="category-filter mb-4" role="group" aria-label="Filtrar serviços por categoria">
+            <button class="btn btn-primary filter-btn active" data-category="todos" aria-pressed="true">Todos</button>
+            <button class="btn btn-outline-primary filter-btn" data-category="limpeza" aria-pressed="false">Limpeza</button>
+            <button class="btn btn-outline-primary filter-btn" data-category="manutencao" aria-pressed="false">Manutenção</button>
+            <button class="btn btn-outline-primary filter-btn" data-category="reformas" aria-pressed="false">Reformas</button>
+            <button class="btn btn-outline-primary filter-btn" data-category="pintura" aria-pressed="false">Pintura</button>
+            <button class="btn btn-outline-primary filter-btn" data-category="eletrica" aria-pressed="false">Elétrica</button>
+            <button class="btn btn-outline-primary filter-btn" data-category="hidraulica" aria-pressed="false">Hidráulica</button>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="row g-4" id="servicesContainer">
+            <!-- Os cards de serviço serão inseridos aqui via JavaScript -->
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript de Acessibilidade -->
+    <script src="js/accessibility.js"></script>
+    <script>
+        // Inicializar acessibilidade com instruções específicas da página
+        const pageInstructions = `
+            Esta é a página de serviços do Conecta Bairro.
+            Use o campo de busca e os filtros de categoria para encontrar serviços.
+            Cada serviço mostra preço, avaliação e informações do prestador.
+            Use Tab para navegar entre os serviços e Enter para selecionar.
+        `;
+        document.addEventListener('DOMContentLoaded', () => {
+            AccessibilityManager.init(pageInstructions);
+        });
+
+        // Verificar autenticação
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const navbarButtons = document.getElementById('navbarButtons');
+
+            if (token) {
+                navbarButtons.innerHTML = `
+                    <a href="dashboard.html" class="btn btn-outline-primary me-2">Dashboard</a>
+                    <button onclick="logout()" class="btn btn-primary">Sair</button>
+                `;
+            } else {
+                navbarButtons.innerHTML = `
+                    <a href="login.html" class="btn btn-outline-primary me-2">Entrar</a>
+                    <a href="registro.html" class="btn btn-primary">Cadastrar</a>
+                `;
+            }
+        }
+
+        // Função de logout
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+
+        // Carregar serviços da API
+        async function loadServices() {
+            try {
+                const response = await fetch('http://localhost:3000/services');
+                const services = await response.json();
+                displayServices(services);
+            } catch (error) {
+                console.error('Erro ao carregar serviços:', error);
+                // Dados de exemplo para demonstração
+                const mockServices = [
+                    {
+                        id: 1,
+                        title: "Limpeza Residencial",
+                        category: "limpeza",
+                        price: 120,
+                        rating: 4.8,
+                        reviews: 156,
+                        location: "Centro",
+                        provider: {
+                            name: "Maria Silva",
+                            image: "img/avatar1.jpg"
+                        },
+                        description: "Serviço completo de limpeza residencial com produtos de qualidade."
+                    },
+                    // Adicione mais serviços de exemplo conforme necessário
+                ];
+                displayServices(mockServices);
+            }
+        }
+
+        // Exibir serviços na página
+        function displayServices(services) {
+            const container = document.getElementById('servicesContainer');
+            container.innerHTML = services.map(service => `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card service-card" role="article" aria-labelledby="service-title-${service.id}">
+                        <div class="position-relative">
+                            <img src="img/services/${service.category}.jpg" 
+                                 class="card-img-top" 
+                                 alt="Imagem representativa do serviço: ${service.title}" 
+                                 style="height: 200px; object-fit: cover;">
+                            <span class="service-badge" role="status">${service.category}</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title" id="service-title-${service.id}">${service.title}</h5>
+                            <p class="card-text text-muted">${service.description}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="rating-stars" role="img" aria-label="Avaliação: ${service.rating} de 5 estrelas">
+                                    ${generateStars(service.rating)}
+                                    <small class="text-muted" aria-label="Baseado em ${service.reviews} avaliações">(${service.reviews})</small>
+                                </div>
+                                <span class="text-primary fw-bold" aria-label="Preço por hora: ${service.price} reais">R$ ${service.price}/hora</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="${service.provider.image}" 
+                                         class="provider-avatar me-2" 
+                                         alt="Foto do prestador: ${service.provider.name}"
+                                         aria-label="Prestador do serviço">
+                                    <small class="text-muted">${service.provider.name}</small>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                                    <span aria-label="Localização:">${service.location}</span>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <button class="btn btn-primary w-100" 
+                                    onclick="bookService(${service.id})"
+                                    aria-label="Contratar serviço de ${service.title} com ${service.provider.name}">
+                                Contratar Serviço
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Gerar estrelas de avaliação
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+            let stars = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+
+        // Filtrar serviços por categoria
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remover classe active de todos os botões
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.replace('btn-primary', 'btn-outline-primary');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                
+                // Adicionar classe active ao botão clicado
+                button.classList.add('active');
+                button.classList.replace('btn-outline-primary', 'btn-primary');
+                button.setAttribute('aria-pressed', 'true');
+                
+                // Anunciar mudança para leitores de tela
+                const announcement = document.createElement('div');
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.className = 'visually-hidden';
+                announcement.textContent = `Filtrando serviços por ${button.textContent}`;
+                document.body.appendChild(announcement);
+                setTimeout(() => announcement.remove(), 1000);
+                
+                // Recarregar serviços com filtro
+                loadServices(button.dataset.category);
+            });
+        });
+
+        // Função para contratar serviço
+        function bookService(serviceId) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // Salvar o ID do serviço para redirecionamento após o login
+                localStorage.setItem('pendingServiceBooking', serviceId);
+                
+                // Anunciar para leitores de tela
+                AccessibilityManager.announceMessage('É necessário fazer login para contratar serviços. Redirecionando para a página de login.');
+                
+                // Redirecionar para login com parâmetro de retorno
+                window.location.href = `login.html?redirect=servicos&serviceId=${serviceId}`;
+                return;
+            }
+            
+            // Se estiver logado, implementar lógica de contratação
+            try {
+                // Aqui implementaria a chamada à API
+                console.log('Contratando serviço:', serviceId);
+                AccessibilityManager.announceMessage('Iniciando processo de contratação do serviço.');
+                // Por enquanto, apenas simulamos o redirecionamento para uma página de confirmação
+                window.location.href = `contrato.html?serviceId=${serviceId}`;
+            } catch (error) {
+                AccessibilityManager.announceMessage('Erro ao processar a contratação. Por favor, tente novamente.');
+                console.error('Erro ao contratar serviço:', error);
+            }
+        }
+
+        // Função de busca
+        function searchServices() {
+            const searchTerm = document.getElementById('searchInput').value;
+            const location = document.getElementById('locationSelect').value;
+            
+            // Anunciar busca para leitores de tela
+            const searchMessage = `Buscando serviços${searchTerm ? ' com o termo ' + searchTerm : ''}${location ? ' no bairro ' + location : ''}`;
+            AccessibilityManager.announceMessage(searchMessage);
+            
+            // Implementar lógica de busca
+            console.log('Buscando:', searchTerm, 'em:', location);
+            loadServices();
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadServices();
+        });
+    </script>
+</body>
+</html>

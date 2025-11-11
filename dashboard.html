@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard - Conecta Bairro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background:#f8fafc; }
+    .topbar { background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(2,6,23,.08); }
+    .service-img { width:80px; height:60px; object-fit:cover; border-radius:6px; }
+    .spinner-center { display:flex; align-items:center; justify-content:center; min-height:120px; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar topbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Conecta Bairro</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="servicos.html">Serviços</a></li>
+          <li class="nav-item"><a class="nav-link" href="sobrenos.html">Sobre</a></li>
+        </ul>
+        <div id="topActions" class="d-flex align-items-center">
+          <!-- preenchido via JS -->
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <div id="alertArea"></div>
+
+    <div class="row mb-4">
+      <div class="col-lg-8">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div>
+            <h2 id="greeting">Olá, Usuário</h2>
+            <p class="text-muted mb-0" id="userEmail"></p>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="card p-3 card-hover">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <small class="text-muted">Serviços Ativos</small>
+                  <div class="h4 mb-0" id="countServices">0</div>
+                </div>
+                <i class="fa-solid fa-briefcase fa-2x text-primary"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 card-hover">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <small class="text-muted">Avaliação média</small>
+                  <div class="h4 mb-0" id="avgRating">--</div>
+                </div>
+                <i class="fa-solid fa-star fa-2x text-warning"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 card-hover">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <small class="text-muted">Pedidos recebidos</small>
+                  <div class="h4 mb-0" id="countRequests">0</div>
+                </div>
+                <i class="fa-solid fa-list-check fa-2x text-success"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <small class="text-muted">Conta</small>
+              <div id="accountType">Usuário</div>
+            </div>
+          </div>
+          <div class="d-grid gap-2">
+            <a href="registro.html" class="btn btn-outline-secondary">Editar Perfil</a>
+            <button id="logoutBtn" class="btn btn-danger">Sair</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="mb-0">Meus Serviços</h3>
+      <div>
+        <a href="servicos.html" class="btn btn-outline-primary me-2">Buscar Serviços</a>
+        <a href="registro.html#seja-profissional" class="btn btn-primary">Novo Serviço</a>
+      </div>
+    </div>
+
+    <div id="servicesList">
+      <div class="spinner-center" id="loadingServices">
+        <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Mostra alerta na página
+    function showPageAlert(message, type = 'danger'){
+      const area = document.getElementById('alertArea');
+      area.innerHTML = `<div class="alert alert-${type} alert-dismissible" role="alert">${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function clearPageAlert(){ document.getElementById('alertArea').innerHTML = ''; }
+
+    async function fetchMe(token){
+      const res = await fetch('http://localhost:3000/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+      if (!res.ok) throw res;
+      return await res.json();
+    }
+
+    async function fetchMyServices(token, userId){
+      // tenta endpoint /services?userId=... , fallback para /my/services
+      try {
+        const q = `http://localhost:3000/services?userId=${encodeURIComponent(userId)}`;
+        const res = await fetch(q, { headers: { 'Authorization': 'Bearer ' + token } });
+        if (res.ok) return await res.json();
+        // fallback
+        const res2 = await fetch('http://localhost:3000/my/services', { headers: { 'Authorization': 'Bearer ' + token } });
+        if (res2.ok) return await res2.json();
+        throw new Error('Nenhum serviço encontrado');
+      } catch (err){
+        throw err;
+      }
+    }
+
+    async function initDashboard(){
+      const token = localStorage.getItem('token');
+      if (!token){
+        // não autenticado
+        window.location.href = 'login.html';
+        return;
+      }
+
+      try{
+        const me = await fetchMe(token);
+        document.getElementById('greeting').innerText = `Olá, ${me.name || me.user?.name || 'Usuário'}`;
+        document.getElementById('userEmail').innerText = me.email || me.user?.email || '';
+        document.getElementById('accountType').innerText = me.isProfessional ? 'Profissional' : 'Cliente';
+
+        // popular top actions (dashboard link and logout)
+        const topActions = document.getElementById('topActions');
+        topActions.innerHTML = `
+          <a href=\"dashboard.html\" class=\"btn btn-sm btn-outline-primary me-2\">Dashboard</a>
+          <button id=\"topLogout\" class=\"btn btn-sm btn-danger\">Sair</button>
+        `;
+        document.getElementById('topLogout').addEventListener('click', () => { localStorage.removeItem('token'); window.location.href='login.html'; });
+        document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('token'); window.location.href='login.html'; });
+
+        // carregar serviços do usuário
+        let services = [];
+        try{
+          services = await fetchMyServices(token, me.id || me.user?.id || me.userId || '');
+        }catch(err){
+          // mostrar erro leve e seguir
+          console.warn('Erro ao buscar serviços do usuário', err);
+          showPageAlert('Não foi possível recuperar seus serviços. Tente atualizar a página.', 'warning');
+        }
+
+        renderServices(services || []);
+
+        // preencher métricas simples
+        document.getElementById('countServices').innerText = (services && services.length) || 0;
+        // calc avg rating se existir campo
+        const avg = (services && services.reduce((s, it) => s + (it.rating || 0), 0) / (services.length || 1));
+        document.getElementById('avgRating').innerText = services.length ? (avg.toFixed(1)) : '--';
+        document.getElementById('countRequests').innerText = me.requestsCount || 0;
+
+      }catch(err){
+        console.error(err);
+        // se fetchMe retornou 401/403 redireciona para login
+        if (err.status === 401 || err.status === 403) {
+          localStorage.removeItem('token');
+          window.location.href = 'login.html';
+          return;
+        }
+        showPageAlert('Erro ao carregar dashboard. Faça login novamente.', 'danger');
+      }
+    }
+
+    function renderServices(list){
+      const container = document.getElementById('servicesList');
+      if (!list || list.length === 0){
+        container.innerHTML = `<div class="card"><div class="card-body">Nenhum serviço encontrado. <a href=\"registro.html#seja-profissional\">Cadastre um serviço</a>.</div></div>`;
+        return;
+      }
+
+      const items = list.map(s => `
+        <div class="card mb-3">
+          <div class="card-body d-flex gap-3 align-items-center">
+            <img src="${s.image || 'img/services/default.jpg'}" class="service-img" alt="${(s.title||'')}">
+            <div class="flex-fill">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h5 class="mb-1">${s.title || s.name || 'Serviço'}</h5>
+                  <small class="text-muted">${s.category || ''} • ${s.location || ''}</small>
+                </div>
+                <div class="text-end">
+                  <div class="fw-bold text-primary">R$ ${s.price || s.hourlyRate || s.pricePerHour || ' - '}</div>
+                  <small class="text-muted">${s.rating? ('⭐ ' + s.rating) : ''}</small>
+                </div>
+              </div>
+              <p class="mb-0 text-muted small mt-2">${s.description ? s.description.substring(0,140) : ''}</p>
+            </div>
+            <div class="ms-3 d-flex flex-column gap-2">
+              <a href="servico-detalhe.html?id=${s.id}" class="btn btn-sm btn-outline-primary">Ver</a>
+              <button class="btn btn-sm btn-danger" onclick="deleteService(${s.id})">Excluir</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = items;
+    }
+
+    async function deleteService(id){
+      if (!confirm('Deseja realmente excluir este serviço?')) return;
+      const token = localStorage.getItem('token');
+      try{
+        const res = await fetch(`http://localhost:3000/services/${id}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+        if (res.ok){
+          showPageAlert('Serviço excluído com sucesso.', 'success');
+          // dar refresh simples
+          initDashboard();
+        } else {
+          const text = await res.text();
+          showPageAlert('Erro ao excluir: ' + (text || res.statusText), 'warning');
+        }
+      }catch(err){
+        console.error(err);
+        showPageAlert('Erro de rede ao excluir serviço.', 'danger');
+      }
+    }
+
+    // inicializa
+    initDashboard();
+  </script>
+
+</body>
+</html>

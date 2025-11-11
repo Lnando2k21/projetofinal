@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Encontre os melhores serviços locais do seu bairro. Marketplace de serviços hiperlocal, conectando você aos profissionais mais próximos.">
+    <meta name="keywords" content="serviços locais, marketplace, bairro, profissionais, serviços domésticos">
+    <title>ServLocal - O Marketplace de Serviços do Seu Bairro</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Estilos de Acessibilidade -->
+    <link rel="stylesheet" href="css/accessibility.css">
+
+    <!-- VLibras Widget -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+</head>
+<body>
+    <!-- Controles de Acessibilidade -->
+    <div class="accessibility-controls">
+        <button class="accessibility-button" id="themeSwitch" 
+                aria-label="Alternar entre modo claro e escuro" 
+                role="switch" 
+                aria-checked="false" 
+                data-state="light">
+            <span class="theme-icon" aria-hidden="true">
+                <i class="fas fa-sun light-icon"></i>
+                <i class="fas fa-moon dark-icon"></i>
+            </span>
+            <span class="theme-text" data-light-text="Modo Escuro" data-dark-text="Modo Claro">Modo Escuro</span>
+        </button>
+        <button class="accessibility-button" id="audioButton" aria-label="Ouvir instruções da página">
+            <span class="theme-icon" aria-hidden="true">🔊</span>
+            <span class="theme-text">Ouvir Página</span>
+        </button>
+    </div>
+    
+    <!-- Link para pular para o conteúdo principal -->
+    <a href="#main-content" class="skip-to-main">Pular para o conteúdo principal</a>
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="https://i.pinimg.com/474x/9b/07/7c/9b077c85d99d59d4e0d0b505e8d151c0.jpg" 
+                     alt="ServLocal Logo" 
+                     class="logo-img"
+                     aria-label="Logotipo do ServLocal">
+            <nav class="nav">
+                <button class="nav-toggle" aria-label="Abrir Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="servicos.html">Serviços</a></li>
+                    <li><a href="sobrenos.html">Sobre</a></li>
+                    <li><a href="depoimentos.html">Depoimentos</a></li>
+                    <li><a href="contato.html">Contato</a></li>
+                    <li><a href="login.html" class="btn-login">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" role="banner" aria-labelledby="hero-title">
+        <div class="container">
+            <div class="hero-content">
+                <h1 id="hero-title">Encontre os Melhores Serviços do Seu Bairro</h1>
+                <p id="hero-description">Conectamos você aos profissionais mais qualificados da sua região. Rápido, seguro e confiável.</p>
+                <div class="hero-buttons" role="group" aria-label="Ações principais">
+                    <a href="servicos.html" class="btn btn-primary" role="button" aria-label="Encontrar serviços disponíveis">Encontrar Serviços</a>
+                    <a href="registro.html" class="btn btn-secondary" role="button" aria-label="Cadastrar-se como profissional">Seja um Profissional</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="cards" id="serviços">
+        <div class="container">
+            <h2>Como Podemos Ajudar?</h2>
+            <div class="cards-grid">
+                <a href="servicos.html" class="card">
+                    <i class="fas fa-tools"></i>
+                    <h3>Serviços</h3>
+                    <p>Encontre profissionais qualificados para qualquer serviço</p>
+                </a>
+                <a href="registro.html" class="card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Trabalhe Conosco</h3>
+                    <p>Seja um prestador de serviços e aumente sua renda</p>
+                </a>
+                <a href="contato.html" class="card">
+                    <i class="fas fa-store"></i>
+                    <h3>Parcerias</h3>
+                    <p>Estabeleça parcerias estratégicas com nossa plataforma</p>
+                </a>
+                <a href="sobrenos.html" class="card">
+                    <i class="fas fa-building"></i>
+                    <h3>Sobre Nós</h3>
+                    <p>Conheça nossa história e missão</p>
+                </a>
+                <a href="login.html" class="card">
+                    <i class="fas fa-user"></i>
+                    <h3>Login</h3>
+                    <p>Acesse sua conta para gerenciar serviços</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services-filter">
+        <div class="container">
+            <h2>Serviços Disponíveis</h2>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="todos">Todos</button>
+                <button class="filter-btn" data-filter="domesticos">Domésticos</button>
+                <button class="filter-btn" data-filter="manutencao">Manutenção</button>
+                <button class="filter-btn" data-filter="beleza">Beleza</button>
+                <button class="filter-btn" data-filter="aulas">Aulas</button>
+            </div>
+            <div class="services-grid">
+                <!-- Serviços serão inseridos dinamicamente via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="sobre">
+        <div class="container">
+            <div class="about-content">
+                <h2>Sobre a ServLocal</h2>
+                <p>Conectamos pessoas a serviços locais de qualidade desde 2023, transformando a maneira como os serviços de bairro são descobertos e contratados.</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50mil+</span>
+                        <span class="stat-label">Usuários Ativos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10mil+</span>
+                        <span class="stat-label">Profissionais</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100mil+</span>
+                        <span class="stat-label">Serviços Realizados</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="depoimentos">
+        <div class="container">
+            <h2>O Que Dizem Nossos Clientes</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <img src="https://gente.globo.com/wp-content/uploads/2024/10/155417-gente-texto-mulheres-na-politica-o-crescimento-da-participacao-feminina-refletido-nas-politicas-publicas.jpg" alt="Cliente Maria" class="testimonial-img">
+                    <p class="testimonial-text">"Encontrei ótimos profissionais para reformar minha casa. Serviço de qualidade e preço justo!"</p>
+                    <p class="testimonial-author">Maria Silva</p>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <img src="https://static.vecteezy.com/ti/fotos-gratis/t2/5346410-close-up-retrato-de-sorrindo-bonito-jovem-caucasiano-cara-olhando-para-camera-em-fundo-de-estudio-cinza-claro-isolado-foto.jpg" alt="Cliente João" class="testimonial-img">
+                    <p class="testimonial-text">"Como profissional, duplicei minha renda depois que comecei a usar a plataforma."</p>
+                    <p class="testimonial-author">João Santos</p>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contato" role="region" aria-labelledby="contact-title">
+        <div class="container">
+            <h2 id="contact-title">Entre em Contato</h2>
+            <div class="contact-content">
+                <div class="contact-info" role="complementary" aria-label="Informações de contato">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        <p><span class="visually-hidden">Endereço:</span> Rua Curva do Vento, 2025. <br>Santarém - PA</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone" aria-hidden="true"></i>
+                        <p><span class="visually-hidden">Telefone:</span> (93) 99123-4567</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <p><span class="visually-hidden">Email:</span> servlocal@gmail.com</p>
+                    </div>
+                </div>
+                <form class="contact-form" role="form" aria-labelledby="contact-title">
+                    <div class="form-group">
+                        <label for="contact-name" class="visually-hidden">Nome completo</label>
+                        <input type="text" id="contact-name" placeholder="Nome completo" required
+                               aria-required="true" aria-label="Nome completo">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-email" class="visually-hidden">E-mail</label>
+                        <input type="email" id="contact-email" placeholder="E-mail" required
+                               aria-required="true" aria-label="E-mail">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-phone" class="visually-hidden">Telefone</label>
+                        <input type="tel" id="contact-phone" placeholder="Telefone" required
+                               aria-required="true" aria-label="Telefone">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-message" class="visually-hidden">Mensagem</label>
+                        <textarea id="contact-message" placeholder="Mensagem" required
+                                  aria-required="true" aria-label="Mensagem"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" aria-label="Enviar formulário de contato">
+                        Enviar Mensagem
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ServLocal</h3>
+                    <p>Transformando a maneira como as pessoas encontram e contratam serviços locais.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="servicos.html">Serviços</a></li>
+                        <li><a href="sobrenos.html">Sobre Nós</a></li>
+                        <li><a href="depoimentos.html">Depoimentos</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="registro.html">Cadastre-se</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Redes Sociais</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Seu e-mail">
+                        <button type="submit" class="btn btn-primary">Inscrever</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ServLocal. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <!-- JavaScript de Acessibilidade -->
+    <script src="js/accessibility.js"></script>
+    <script>
+        // Instruções específicas para a página inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            const pageInstructions = `
+                Esta é a página inicial do ServLocal.
+                Aqui você encontra informações sobre nossos serviços, depoimentos de clientes
+                e pode entrar em contato conosco.
+                Use a navegação no topo da página para acessar outras seções do site.
+            `;
+            AccessibilityManager.init(pageInstructions);
+        });
+    </script>
+</body>
+</html>
