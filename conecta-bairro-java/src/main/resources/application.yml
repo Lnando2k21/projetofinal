@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: conecta-bairro-api
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/conecta_bairro?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    show-sql: false
+  
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+
+server:
+  port: 3000
+  servlet:
+    context-path: /api
+
+app:
+  jwtSecret: ${JWT_SECRET:sua_chave_secreta_muito_longa_e_segura_aqui}
+  jwtExpirationMs: 86400000 # 24 horas
+
+logging:
+  level:
+    root: INFO
+    com.conectabairro: DEBUG
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    path: /v3/api-docs

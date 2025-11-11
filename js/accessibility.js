@@ -15,49 +15,10 @@ const AccessibilityManager = {
 
     // Inicialização
     init(pageSpecificInstructions = '') {
-        this.initTheme();
         this.initAudio(pageSpecificInstructions);
         this.initKeyboardNav();
         this.initVLibras();
         this.setupSkipLink();
-    },
-
-    // Gerenciamento de tema
-    initTheme() {
-        const themeSwitch = document.getElementById('themeSwitch');
-        if (!themeSwitch) return;
-
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const savedTheme = localStorage.getItem('theme');
-        
-        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeSwitch.setAttribute('data-state', 'dark');
-            themeSwitch.setAttribute('aria-checked', 'true');
-            themeSwitch.querySelector('.theme-text').textContent = 'Modo Claro';
-        }
-
-        themeSwitch.addEventListener('click', () => {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const newTheme = isDark ? 'light' : 'dark';
-            
-            // Atualizar atributos e estados
-            document.documentElement.setAttribute('data-theme', newTheme);
-            themeSwitch.setAttribute('data-state', newTheme);
-            themeSwitch.setAttribute('aria-checked', !isDark);
-            themeSwitch.querySelector('.theme-text').textContent = isDark ? 'Modo Escuro' : 'Modo Claro';
-            
-            // Animar a transição do ícone
-            const icons = themeSwitch.querySelectorAll('.light-icon, .dark-icon');
-            icons.forEach(icon => {
-                icon.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-            });
-            
-            localStorage.setItem('theme', newTheme);
-            
-            // Anunciar mudança para leitores de tela
-            this.announceMessage(`Tema alterado para modo ${isDark ? 'claro' : 'escuro'}`);
-        });
     },
 
     // Sistema de áudio

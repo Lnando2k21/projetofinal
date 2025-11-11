@@ -129,14 +129,8 @@
     </style>
 </head>
 <body>
-    <!-- Botão de alternar tema -->
-    <button class="theme-switch" id="themeSwitch" aria-label="Alternar modo escuro">
-        <span class="theme-icon" aria-hidden="true">🌓</span>
-        <span class="theme-text">Modo Escuro</span>
-    </button>
-
     <!-- Botão de áudio -->
-    <button class="theme-switch" id="audioButton" style="top: 4rem;" aria-label="Ouvir instruções da página">
+    <button class="theme-switch" id="audioButton" style="top: 1rem;" aria-label="Ouvir instruções da página">
         <span class="theme-icon" aria-hidden="true">🔊</span>
         <span class="theme-text">Ouvir Página</span>
     </button>
@@ -232,28 +226,9 @@
             Bem-vindo ao Conecta Bairro. Esta é a página de login.
             Use o formulário para entrar com seu email e senha.
             Há também opções de login com Google e Facebook.
-            No topo da página, você encontra botões para alternar o modo escuro e ouvir estas instruções.
+            No topo da página, você encontra um botão para ouvir estas instruções.
             O widget de Libras está disponível no canto direito da tela.
         `;
-
-        // Theme switcher
-        function initTheme() {
-            const themeSwitch = document.getElementById('themeSwitch');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const savedTheme = localStorage.getItem('theme');
-            
-            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                themeSwitch.querySelector('.theme-text').textContent = 'Modo Claro';
-            }
-
-            themeSwitch.addEventListener('click', () => {
-                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
-                themeSwitch.querySelector('.theme-text').textContent = isDark ? 'Modo Escuro' : 'Modo Claro';
-                localStorage.setItem('theme', isDark ? 'light' : 'dark');
-            });
-        }
 
         // Audio instructions
         function initAudio() {
@@ -546,7 +521,6 @@
         // Verificar se já existe um token válido
         document.addEventListener('DOMContentLoaded', function() {
             // Inicializar recursos de acessibilidade
-            initTheme();
             initAudio();
             initKeyboardNav();
 

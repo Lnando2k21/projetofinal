@@ -1,0 +1,25 @@
+package com.conectabairro.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * DTO para requisição de login
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class LoginRequest {
+    
+    @Email(message = "Email deve ser válido")
+    @NotBlank(message = "Email é obrigatório")
+    private String email;
+    
+    @NotBlank(message = "Senha é obrigatória")
+    private String password;
+}
