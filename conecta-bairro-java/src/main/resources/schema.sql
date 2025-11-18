@@ -81,14 +81,3 @@ CREATE TABLE reviews (
     INDEX idx_request_id (request_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Criar usuários de teste
-INSERT INTO users (name, email, password, phone, user_type, bio, is_verified) VALUES
-('Maria Silva', 'maria@example.com', '$2a$10$slYQmyNdGzin7olVN3p5Be7DlH.PKZbv5H8KnzzVgXXbVxzy3/C3m', '(93) 99123-1234', 'SERVICE_PROVIDER', 'Profissional em limpeza residencial', TRUE),
-('João Santos', 'joao@example.com', '$2a$10$slYQmyNdGzin7olVN3p5Be7DlH.PKZbv5H8KnzzVgXXbVxzy3/C3m', '(93) 99123-5678', 'CUSTOMER', 'Cliente frequente', FALSE),
-('Ana Costa', 'ana@example.com', '$2a$10$slYQmyNdGzin7olVN3p5Be7DlH.PKZbv5H8KnzzVgXXbVxzy3/C3m', '(93) 99123-9012', 'SERVICE_PROVIDER', 'Encanador profissional', TRUE);
-
--- Criar serviços de teste
-INSERT INTO services (title, description, category, price, location, provider_id, is_active) VALUES
-('Limpeza Residencial', 'Serviço completo de limpeza para residências', 'limpeza', 120.00, 'Centro', 1, TRUE),
-('Manutenção Hidráulica', 'Conserto e manutenção de sistemas hidráulicos', 'hidraulica', 150.00, 'Vila Nova', 3, TRUE),
-('Pintura de Interiores', 'Pintura profissional para interiores', 'pintura', 200.00, 'Jardins', 1, TRUE);
