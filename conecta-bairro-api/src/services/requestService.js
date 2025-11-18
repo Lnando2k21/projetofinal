@@ -1,22 +1,17 @@
-// Serviço mínimo para gerenciar requests (jobs)
-const requests = [];
-let idCounter = 1;
+// Serviço de requests usando Prisma
+const prisma = require('../config/database');
 
 async function create(data) {
-  const record = { id: idCounter++, status: 'PENDING', ...data };
-  requests.push(record);
-  return record;
+  const created = await prisma.request.create({ data });
+  return created;
 }
 
 async function getById(id) {
-  return requests.find(r => r.id === id);
+  return prisma.request.findUnique({ where: { id: Number(id) } });
 }
 
 async function updateStatus(id, status) {
-  const r = requests.find(r => r.id === id);
-  if (!r) throw new Error('Not found');
-  r.status = status;
-  return r;
+  return prisma.request.update({ where: { id: Number(id) }, data: { status } });
 }
 
 module.exports = { create, getById, updateStatus };

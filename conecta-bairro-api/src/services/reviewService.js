@@ -1,15 +1,12 @@
-// Serviço mínimo para reviews
-const reviews = [];
-let idCounter = 1;
+// Serviço de reviews usando Prisma
+const prisma = require('../config/database');
 
 async function create(data) {
-  const record = { id: idCounter++, ...data };
-  reviews.push(record);
-  return record;
+  return prisma.review.create({ data });
 }
 
 async function listByService(serviceId) {
-  return reviews.filter(r => r.serviceId === serviceId);
+  return prisma.review.findMany({ where: { serviceId: Number(serviceId) } });
 }
 
 module.exports = { create, listByService };

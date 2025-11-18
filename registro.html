@@ -165,6 +165,9 @@
         <div class="container">
             <div id="register-content" class="register-card" role="main" aria-labelledby="register-title">
                 <h1 id="register-title" class="text-center mb-4">Crie sua conta</h1>
+                <div class="text-center mb-3">
+                    <a href="login.html" class="btn btn-sm btn-outline-secondary" id="backToLoginBtn">Voltar ao login</a>
+                </div>
                 
                 <!-- Tipo de Conta -->
                 <div class="type-selector" role="radiogroup" aria-label="Selecione o tipo de conta">
@@ -529,20 +532,41 @@
             }
 
             try {
-                const response = await fetch('http://localhost:3000/auth/register', {
+                // Enviar para o backend Node (porta 3001) que expõe /api/auth/register
+                const apiUrl = window.__API_URL__ || 'http://localhost:3001/api/auth/register';
+
+                // mapear campos para o formato esperado pelo controller Node
+                const payload = {
+                    name: formData.name,
+                    email: formData.email,
+                    password: formData.password,
+                    whatsapp: formData.phone,
+                    cep: formData.address.cep,
+                    address: formData.address,
+                    role: userType === 'profissional' ? 'PROVIDER' : 'CLIENT'
+                };
+
+                // se for profissional, envie campos extras (o backend atual pode ignorá-los)
+                if (userType === 'profissional') {
+                    payload.professional = formData.professional;
+                }
+
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(payload)
                 });
 
                 if (response.ok) {
-                    // Exibe mensagem de sucesso e redireciona para login
-                    showAlert('Cadastro realizado com sucesso! Você será redirecionado para a tela de login.', 'success');
+                    // Exibe mensagem de sucesso com botão para ir ao login imediato
+                    showAlert(`Cadastro realizado com sucesso! <button id="goLoginBtn" class="btn btn-sm btn-light ms-2">Ir para login</button>`, 'success');
+                    // Adiciona listener para o botão de ir ao login
                     setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2500);
+                        const btn = document.getElementById('goLoginBtn');
+                        if (btn) btn.addEventListener('click', redirectToLogin);
+                    }, 50);
                 } else {
                     const errText = await response.text();
                     showAlert('Erro no registro: ' + (errText || response.statusText));
@@ -577,6 +601,10 @@
                 });
             }
         });
+
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
     </script>
 </body>
 </html>

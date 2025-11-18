@@ -1,33 +1,30 @@
-// Serviço mínimo de serviços - substitua por consultas reais com Prisma
-const services = [];
-let idCounter = 1;
+// Serviço de serviços usando Prisma
+const prisma = require('../config/database');
 
 async function list(filters = {}) {
-  // Em um DB real, aplique filtros por bairro e categoria
-  return services;
+  const where = {};
+  // filters.category: nome da categoria
+  if (filters.category) where.category = { is: { name: filters.category } };
+  // filters.bairro: nome do bairro/neighbor nas áreas
+  if (filters.bairro) where.areas = { some: { neighbor: filters.bairro } };
+  return prisma.service.findMany({ where, include: { provider: true, category: true, areas: true } });
 }
 
 async function getById(id) {
-  return services.find(s => s.id === id);
+  return prisma.service.findUnique({ where: { id: Number(id) }, include: { provider: true, category: true, areas: true } });
 }
 
 async function create(data) {
-  const record = { id: idCounter++, ...data };
-  services.push(record);
-  return record;
+  const created = await prisma.service.create({ data });
+  return created;
 }
 
 async function update(id, data) {
-  const idx = services.findIndex(s => s.id === id);
-  if (idx === -1) throw new Error('Not found');
-  services[idx] = { ...services[idx], ...data };
-  return services[idx];
+  return prisma.service.update({ where: { id: Number(id) }, data });
 }
 
 async function remove(id) {
-  const idx = services.findIndex(s => s.id === id);
-  if (idx === -1) throw new Error('Not found');
-  services.splice(idx, 1);
+  await prisma.service.delete({ where: { id: Number(id) } });
 }
 
 module.exports = { list, getById, create, update, remove };
