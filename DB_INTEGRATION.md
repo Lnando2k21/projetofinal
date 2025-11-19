@@ -91,12 +91,3 @@ npm install
 npm start
 ```
 
-Observações e próximas ações
-- Confirme qual backend (Java ou Node) será o ponto único de API público. Atualmente o `conecta-bairro-java` serve em `server.port=3000` com `context-path /api` e o front está apontando para ele por padrão.
-- Se preferir usar o Node como API pública, altere o `REACT_APP_API_URL` para `http://localhost:3001/api`.
-- Teste endpoints (login/register/services) com Postman / Insomnia.
-
-Se quiser, eu posso:
-- Gerar migrations Prisma a partir do schema atual (preciso rodar `npx prisma migrate` localmente — posso gerar arquivos de migration aqui se você quiser que eu crie arquivos SQL no repo).
-- Atualizar o front para chamadas completas (ex.: componentes de cadastro/serviços) se fornecer os endpoints desejados.
-
